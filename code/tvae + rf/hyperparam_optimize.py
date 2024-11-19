@@ -34,7 +34,7 @@ metadata = Metadata.load_from_json(filepath="carclaims_metadata.json")
 
 
 space = [
-    Integer(200, 2000, name="tvae_epochs"),
+    Integer(200, 20000, name="tvae_epochs"),
     # Integer(100, 500, name="tvae_batch_size"),
     Integer(1, 6, name="tvae_compress_depth"),
     Categorical([64, 128, 256, 512, 1024], name="tvae_compress_width"),
@@ -64,11 +64,11 @@ def train_and_predict(
     rf_min_samples_leaf,
 ):
     
-    print(f'Checking: tvae_epochs {tvae_epochs}, tvae_batch_size default, tvae_compress_depth {tvae_compress_depth}, tvae_compress_width {tvae_compress_width}, tvae_decompress_depth {tvae_decompress_depth}, tvae_decompress_width {tvae_decompress_width}, tvae_embedding_dim {tvae_embedding_dim}, rf_n_estimators {rf_n_estimators}, rf_criterion {rf_criterion}, rf_max_depth {rf_max_depth}, rf_min_samples_split {rf_min_samples_split}, rf_min_samples_leaf {rf_min_samples_leaf},')
 
     tvae_compress_dims = [tvae_compress_width] * tvae_compress_depth
     tvae_decompress_dims = [tvae_decompress_width] * tvae_decompress_depth
 
+    print(f'Running: tvae_epochs {tvae_epochs}, tvae_batch_size default, tvae_compress_dims {tvae_compress_dims}, tvae_decompress_dims {tvae_decompress_dims}, tvae_embedding_dim {tvae_embedding_dim}, rf_n_estimators {rf_n_estimators}, rf_criterion {rf_criterion}, rf_max_depth {rf_max_depth}, rf_min_samples_split {rf_min_samples_split}, rf_min_samples_leaf {rf_min_samples_leaf},')
     # Create synthesizer
     synthesizer = TVAESynthesizer(
         metadata,
