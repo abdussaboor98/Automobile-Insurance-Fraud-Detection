@@ -1,0 +1,106 @@
+{
+    "tables": {
+        "carclaims": {
+            "columns": {
+                "Month": {
+                    "sdtype": "categorical"
+                },
+                "WeekOfMonth": {
+                    "sdtype": "categorical"
+                },
+                "DayOfWeek": {
+                    "sdtype": "categorical"
+                },
+                "Make": {
+                    "sdtype": "categorical"
+                },
+                "AccidentArea": {
+                    "sdtype": "categorical"
+                },
+                "DayOfWeekClaimed": {
+                    "sdtype": "categorical"
+                },
+                "MonthClaimed": {
+                    "sdtype": "categorical"
+                },
+                "WeekOfMonthClaimed": {
+                    "sdtype": "categorical"
+                },
+                "Sex": {
+                    "sdtype": "categorical"
+                },
+                "MaritalStatus": {
+                    "sdtype": "categorical"
+                },
+                "Age": {
+                    "sdtype": "numerical"
+                },
+                "Fault": {
+                    "sdtype": "categorical"
+                },
+                "PolicyType": {
+                    "sdtype": "categorical"
+                },
+                "VehicleCategory": {
+                    "sdtype": "categorical"
+                },
+                "VehiclePrice": {
+                    "sdtype": "categorical"
+                },
+                "RepNumber": {
+                    "sdtype": "numerical"
+                },
+                "Deductible": {
+                    "sdtype": "categorical"
+                },
+                "DriverRating": {
+                    "sdtype": "categorical"
+                },
+                "Days:Policy-Accident": {
+                    "sdtype": "categorical"
+                },
+                "Days:Policy-Claim": {
+                    "sdtype": "categorical"
+                },
+                "PastNumberOfClaims": {
+                    "sdtype": "categorical"
+                },
+                "AgeOfVehicle": {
+                    "sdtype": "categorical"
+                },
+                "AgeOfPolicyHolder": {
+                    "sdtype": "categorical"
+                },
+                "PoliceReportFiled": {
+                    "sdtype": "categorical"
+                },
+                "WitnessPresent": {
+                    "sdtype": "categorical"
+                },
+                "AgentType": {
+                    "sdtype": "categorical"
+                },
+                "NumberOfSuppliments": {
+                    "sdtype": "categorical"
+                },
+                "AddressChange-Claim": {
+                    "sdtype": "categorical"
+                },
+                "NumberOfCars": {
+                    "sdtype": "categorical"
+                },
+                "Year": {
+                    "sdtype": "categorical"
+                },
+                "BasePolicy": {
+                    "sdtype": "categorical"
+                },
+                "FraudFound": {
+                    "sdtype": "categorical"
+                }
+            }
+        }
+    },
+    "relationships": [],
+    "METADATA_SPEC_VERSION": "V1"
+}

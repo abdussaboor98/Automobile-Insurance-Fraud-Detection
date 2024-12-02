@@ -29,7 +29,7 @@ df.drop(df[df["DayOfWeekClaimed"] == "0"].index, inplace=True)
 df.drop(columns="PolicyNumber", inplace=True)
 
 # Train-test split
-carclaims_train, carclaims_test = train_test_split(df, test_size=0.2, random_state=141)
+carclaims_train, carclaims_test = train_test_split(df, test_size=0.2, random_state=42)
 
 # Load SDV metadata
 metadata = Metadata.load_from_json(filepath="carclaims_metadata.json")
@@ -38,10 +38,10 @@ metadata = Metadata.load_from_json(filepath="carclaims_metadata.json")
 space = {
     'tvae_epochs': hp.quniform('tvae_epochs', 20000, 30000, 1),
     'tvae_compress_depth': hp.quniform('tvae_compress_depth', 2, 6, 1),
-    'tvae_compress_width': hp.choice('tvae_compress_width', [64, 128, 256, 512, 1024]),
+    'tvae_compress_width': hp.choice('tvae_compress_width', [128, 256, 512, 1024]),
     'tvae_decompress_depth': hp.quniform('tvae_decompress_depth', 2, 6, 1),
-    'tvae_decompress_width': hp.choice('tvae_decompress_width', [64, 128, 256, 512, 1024]),
-    'tvae_embedding_dim': hp.choice('tvae_embedding_dim', [64, 128, 256, 512, 1024])
+    'tvae_decompress_width': hp.choice('tvae_decompress_width', [128, 256, 512, 1024]),
+    'tvae_embedding_dim': hp.choice('tvae_embedding_dim', [64, 128, 256])
 }
 
 def train_and_predict(params):
@@ -78,14 +78,31 @@ def train_and_predict(params):
         # Create balanced synthetic data
         synthetic_data = synthesizer.sample(
             num_rows=100_000,
-            batch_size=1_000
+            batch_size=1_000,
         )
 
-        quality_report = evaluate_quality(
+        quality_report_train = evaluate_quality(
+            real_data=carclaims_train, synthetic_data=synthetic_data, metadata=metadata
+        )
+        quality_report_test = evaluate_quality(
+            real_data=carclaims_test, synthetic_data=synthetic_data, metadata=metadata
+        )
+        quality_report_full = evaluate_quality(
             real_data=df, synthetic_data=synthetic_data, metadata=metadata
         )
 
-        return {'loss': -quality_report.get_score(), 'status': STATUS_OK, 'quality': quality_report.get_score(), "tvae_epochs": tvae_epochs, "tvae_batch_size": "default", "tvae_compress_dims": tvae_compress_dims, "tvae_decompress_dims": tvae_decompress_dims, "tvae_embedding_dim": tvae_embedding_dim}
+        return {
+            "loss": -quality_report_train.get_score(),
+            "status": STATUS_OK,
+            "quality_train": quality_report_train.get_score(),
+            "quality_test": quality_report_test.get_score(),
+            "quality_full": quality_report_full.get_score(),
+            "tvae_epochs": tvae_epochs,
+            "tvae_batch_size": "default",
+            "tvae_compress_dims": tvae_compress_dims,
+            "tvae_decompress_dims": tvae_decompress_dims,
+            "tvae_embedding_dim": tvae_embedding_dim,
+        }
 
     except Exception as e:
         print(f"Exception encountered: {e}")

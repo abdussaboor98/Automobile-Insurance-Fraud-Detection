@@ -17,6 +17,7 @@ from sdv.sampling import Condition
 from hyperopt import fmin, tpe, hp, STATUS_OK, STATUS_FAIL
 from hyperopt.mongoexp import MongoTrials
 from collections import Counter
+import datetime
 
 # Load data
 df = pd.read_csv(
@@ -35,18 +36,18 @@ metadata = Metadata.load_from_json(filepath="carclaims_metadata.json")
 
 
 space = {
-    'tvae_epochs': hp.quniform('tvae_epochs', 10000, 30000, 1),
+    'tvae_epochs': hp.quniform('tvae_epochs', 20000, 30000, 1),
     # 'tvae_batch_size': hp.quniform('tvae_batch_size', 100, 500, 1),
-    'tvae_compress_depth': hp.quniform('tvae_compress_depth', 2, 6, 1),
-    'tvae_compress_width': hp.choice('tvae_compress_width', [64, 128, 256, 512, 1024]),
-    'tvae_decompress_depth': hp.quniform('tvae_decompress_depth', 2, 6, 1),
-    'tvae_decompress_width': hp.choice('tvae_decompress_width', [64, 128, 256, 512, 1024]),
-    'tvae_embedding_dim': hp.choice('tvae_embedding_dim', [64, 128, 256, 512, 1024]),
-    'rf_n_estimators': hp.quniform('rf_n_estimators', 64, 512, 1),
+    'tvae_compress_depth': hp.quniform('tvae_compress_depth', 2, 5, 1),
+    'tvae_compress_width': hp.choice('tvae_compress_width', [128, 256, 512]),
+    'tvae_decompress_depth': hp.quniform('tvae_decompress_depth', 2, 5, 1),
+    'tvae_decompress_width': hp.choice('tvae_decompress_width', [128, 256, 512]),
+    'tvae_embedding_dim': hp.choice('tvae_embedding_dim', [128, 256]),
+    'rf_n_estimators': hp.quniform('rf_n_estimators', 100, 500, 1),
     'rf_criterion': hp.choice('rf_criterion', ["gini", "entropy", "log_loss"]),
-    'rf_max_depth': hp.quniform('rf_max_depth', 2, 50, 1),
-    'rf_min_samples_split': hp.quniform('rf_min_samples_split', 2, 100, 1),
-    'rf_min_samples_leaf': hp.quniform('rf_min_samples_leaf', 1, 100, 1),
+    'rf_max_depth': hp.quniform('rf_max_depth', 2, 35, 1),
+    'rf_min_samples_split': hp.quniform('rf_min_samples_split', 2, 30, 1),
+    'rf_min_samples_leaf': hp.quniform('rf_min_samples_leaf', 1, 15, 1),
 }
 ## rf_search
 # space = {
@@ -97,6 +98,10 @@ def train_and_predict(params):
             decompress_dims=tvae_decompress_dims,  # (128, 128),
         )
         synthesizer.fit(pd.concat([X_rus, y_rus], axis=1))
+        
+        suffix = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
+        filename = ".".join(['synthesizer', suffix, 'pkl'])
+        synthesizer.save(filepath=filename)
 
         major_cnt = carclaims_train['FraudFound'].value_counts()['No']
         minor_cnt = carclaims_train['FraudFound'].value_counts()['Yes']
@@ -141,10 +146,6 @@ def train_and_predict(params):
 
         # Lebel Encode features
         column_labels = {
-            'Month': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-            'DayOfWeek': ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-            'DayOfWeekClaimed': ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-            'MonthClaimed': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
             'AgeOfPolicyHolder': ['16 to 17', '18 to 20', '21 to 25', '26 to 30', '31 to 35', '36 to 40', '41 to 50', '51 to 65', 'over 65'],
             'NumberOfSuppliments': ['none', '1 to 2', '3 to 5', 'more than 5'],
             'AddressChange-Claim': ['no change', 'under 6 months', '1 year', '2 to 3 years', '4 to 8 years'],
@@ -154,9 +155,8 @@ def train_and_predict(params):
             'Days:Policy-Claim': ['15 to 30', '8 to 15', 'more than 30'],
             'PastNumberOfClaims': ['none', '1', '2 to 4', 'more than 4'],
             'AgeOfVehicle': ['new', '2 years', '3 years', '4 years', '5 years', '6 years', '7 years', 'more than 7'],
-            'Make': ['Accura', 'BMW', 'Chevrolet', 'Dodge', 'Ferrari', 'Ford', 'Honda', 'Jaguar', 'Lexus', 'Mazda', 'Mecedes', 'Mercury', 'Nisson', 'Pontiac', 'Porche', 'Saab', 'Saturn', 'Toyota', 'VW']
-
-            }
+            'Deductible': [300, 400, 500, 700]
+        }
 
         for column, labels in column_labels.items():
             oe = OrdinalEncoder(categories=[labels], handle_unknown='error')
@@ -165,6 +165,11 @@ def train_and_predict(params):
 
         # one hot encode
         columns_one_hot = {
+            'Make': ['Accura', 'BMW', 'Chevrolet', 'Dodge', 'Ferrari', 'Ford', 'Honda', 'Jaguar', 'Lexus', 'Mazda', 'Mecedes', 'Mercury', 'Nisson', 'Pontiac', 'Porche', 'Saab', 'Saturn', 'Toyota', 'VW'],
+            'Month': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            'DayOfWeek': ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+            'DayOfWeekClaimed': ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+            'MonthClaimed': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
             'AccidentArea': ['Rural', 'Urban'],
             'Sex': ['Female', 'Male'],
             'MaritalStatus': ['Divorced', 'Married', 'Single', 'Widow'],
@@ -175,7 +180,7 @@ def train_and_predict(params):
             'Fault': ['Policy Holder', 'Third Party'],
             'PolicyType': ['Sedan - All Perils', 'Sedan - Collision', 'Sedan - Liability','Sport - All Perils', 'Sport - Collision', 'Sport - Liability', 'Utility - All Perils', 'Utility - Collision', 'Utility - Liability'],
             'VehicleCategory': ['Sedan', 'Sport', 'Utility'],
-
+            'Year': [1994, 1995, 1996],    
         }
 
         for column, labels in columns_one_hot.items():
@@ -195,7 +200,7 @@ def train_and_predict(params):
             max_depth=rf_max_depth,
             min_samples_split=rf_min_samples_split,
             min_samples_leaf=rf_min_samples_leaf,
-            random_state=141,
+            random_state=42,
         )
         rf_classifier.fit(X_train, y_train)
 
@@ -206,13 +211,13 @@ def train_and_predict(params):
         f1 = f1_score(y_test, y_pred)
         print(f"Accuracy: {accuracy:.4f} Precision: {precision:.4f} Recall: {recall:.4f} F1 Score: {f1:.4f}")
         
-        return {'loss': -f1, 'status': STATUS_OK, 'accuracy': accuracy, 'precision': precision, 'recall': recall, 'f1-score': f1}
+        return {'loss': -f1, 'status': STATUS_OK, 'accuracy': accuracy, 'precision': precision, 'recall': recall, 'f1-score': f1, 'filename': filename}
     
     except Exception as e:
         print(f"Exception encountered: {e}")
         return {'status': STATUS_FAIL, 'exception': str(e)}
     
-trials = MongoTrials('mongo://localhost:1234/hyperopt/jobs', exp_key='exp1')
+trials = MongoTrials('mongo://localhost:1234/hyperopt/jobs', exp_key='exp2')
 
 best = fmin(
     fn=train_and_predict,
@@ -220,7 +225,7 @@ best = fmin(
     algo=tpe.suggest,
     max_evals=100,
     trials=trials,
-    rstate=np.random.default_rng(42),
+    rstate=np.random.default_rng(20),
     show_progressbar=True,
 )
 
