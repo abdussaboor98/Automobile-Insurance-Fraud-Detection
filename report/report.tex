@@ -69,18 +69,24 @@ Abstract
 \end{keywords}
 
 \section{Introduction}
+The insurance sector is one of the oldest and largest financial sectors, as it plays a critical role in managing risk and providing financial security to individuals. 
+
 
 \subsection{Contributions and Plan}
+% Research questions
+% 
 
 \section{Background}
 \subsection{Data Imbalance}
 Data Imbalance refers to a situation in machine learning and data analysis where the distribution of classes in a dataset is highly uneven, with one class significantly outnumbering the other(s). This is common in real-world scenarios such as fraud detection, medical diagnosis, and anomaly detection, where the minority class (e.g., fraudulent claims, rare diseases) is often the most critical but underrepresented. Data imbalance poses challenges for machine learning models, as they tend to favor the majority class, leading to poor performance in predicting the minority class.
-To address this, techniques such as oversampling (e.g., SMOTE \cite{viaeneInsuranceFraudIssues2004} Chawla et al., 2002) or undersampling can be employed. Additionally, cost-sensitive learning and ensemble methods are also effective in enhancing the model's focus on minority class predictions (He & Garcia, 2009). Proper evaluation metrics like F1-score, precision-recall curves, and area under the precision-recall curve (AUC-PR) are essential for assessing performance on imbalanced datasets (Fernández et al., 2018).
+To address this, techniques such as oversampling (e.g., SMOTE \citealp{SMOTESyntheticMinority}) or undersampling can be employed. Additionally, cost-sensitive learning and ensemble methods are also effective in enhancing the model's focus on minority class predictions (\citealp{garcia2009}). Proper evaluation metrics like F1-score, precision-recall curves, and area under the precision-recall curve (AUC-PR) are essential for assessing performance on imbalanced datasets (Fernández et al., 2018).
 By addressing data imbalance, models can better generalize and improve performance in critical applications, ensuring fairness and reliability in decision-making tasks.
 \subsection{Data Leakage}
+Data leakage in machine learning occurs when the attributes and features of the test data are introduced in the training data, and these attributes or features won't be availabe during the actual prediction stage of the model. Data leakage lead to having a good or excellent peroformance in the training and testing phase, but fails in the production phase. The common causes of data leakage include improper preprocessing, flawed feature engineering, or cross-validation errors \cite{Kaufman2012}. Data leakage can also be a result of oversampling the data before the data is split for training. When the data is split into train and test after oversampling, the data samples that are very similar, or identical in some cases, to the test data are introduced in the training data which leads the model to overfit to the test resulting in good testing performance. Data leakage is of more concern in the cases like fraud and fault identification as these involve detectuion of anomalies and outliers. Data leakage in these cases causes the model to memorize the fraudulent data rather than understanding the underlying patterns (\citealp{baesensRobROSERobustApproach2021}).
 
 \subsection{Synthetic Data}
-
+Synthetic Data refers to artificially generated data that imitates actual-world information at the same time as keeping its statistical and structural format. According to \cite{SyntheticPatki2016}, synthetic data may be created by the usage of algorithms, simulations, or generative models like GANs (Generative Adversarial Networks) and is used when real information is inaccessible, constrained, or sensitive.
+In simple terms, synthetic data acts alternatively for real records. For example, in training gadget learning models, synthetic data allows builders to test their algorithms without exposing non-public or private information. due to privacy constraints, It is typically utilized in fields like healthcare, finance, and autonomous structures to stability privacy, price, and scalability while ensuring information diversity and application.
 
 \section{Related Works}
 
@@ -89,10 +95,13 @@ By addressing data imbalance, models can better generalize and improve performan
 \subsection{Dataset}
 The dataset used in this reasearch is the \emph{carclaims.txt} data that originally made availabe as part of the Agnoss Knowlegde Seeker product. The original copy of the data is no longer available for download, but many publicly available copies are available through GitHub\footnote{https://github.com/Rashmi-77/Vehicle-Insurance-Fraud-Detection} and Kaggle\footnote{https://www.kaggle.com/datasets/khusheekapoor/vehicle-insurance-fraud-detection}. The dataset contains 15,420 samples of automobile insurance claims from an insurance company dor the years from 1994 to 1996. Out of the 15,420 only 923 are fraudulent claims indicating a very high imbalance in the date. This particular dataset was chosen because there are not many publicly availabe datasets on autmobile insurance fraud, and the ones that are availabe are very small. Another reason for choosing this data is that this has been extensively used in many other researches on automobile insurance fraud detection (\citealp{}), making it easy for comparative analysis.
 
+Table \ref{tab:dataCols} shows the various columns of the data and their details. Out of 33 columns only two columns are numerical, Age and PolicyNumber, and the remaining columns are all categorical including the target feature FraudFound. The main drawbacks of this data is that due to its small size and high imbalance the model performances is usually low, leading researches to employ oversampling techniques.
 \begin{longtable}{>{\hspace{0pt}}m{0.244\linewidth}>{\hspace{0pt}}m{0.525\linewidth}>{\hspace{0pt}}m{0.169\linewidth}} 
 \caption{Details about the columns of the dataset - \emph{carclaims.txt}}
+\label{tab:dataCols}\\
 \toprule
 \textbf{Column}      & \textbf{Description}                                  & \textbf{Type}   \endfirsthead
+PolicyNumber         & Unique identifier for the policy                      & Numerical (PK)  \\
 Month                & Month when the incident occurred                      & Categorical     \\
 WeekOfMonth          & Week of the month when the incident occurred          & Categorical     \\
 DayOfWeek            & Day of the week when the incident occurred            & Categorical     \\
@@ -103,12 +112,11 @@ MonthClaimed         & Month when the claim was made                         & C
 WeekOfMonthClaimed   & Week of the month when the claim was made             & Categorical     \\
 Sex                  & Gender of the policyholder                            & Categorical     \\
 MaritalStatus        & Marital status of the policyholder                    & Categorical     \\
-Age                  & Age of the policyholder                               & Numerical       \\
+Age                  & Age of the policyholder (or) the policy\footnote{This is not made clear in the data or any supporting sources}               & Numerical       \\
 Fault                & Indicates fault (Policy Holder or Third Party)        & Categorical     \\
 PolicyType           & Type of insurance policy                              & Categorical     \\
 VehicleCategory      & Category of the vehicle (e.g., Sport, Utility, Sedan) & Categorical     \\
 VehiclePrice         & Price range of the vehicle                            & Categorical     \\
-PolicyNumber         & Unique identifier for the policy                      & Numerical (PK)  \\
 RepNumber            & Identifier for the representative managing the case   & Categorical     \\
 Deductible           & Deductible amount in the policy                       & Categorical     \\
 DriverRating         & Driver rating (1 to 4)                                & Categorical     \\
@@ -130,10 +138,14 @@ FraudFound           & Indicates if fraud was found in the claim             & C
 \end{longtable}
 
 
+\subsection{Proposed Approach}
+
+
+
 
 \subsection{Data Preprocessing}
+Before the data is fed to the machine learning models it need to be processed into format that can be easily understood and interpreted by the models. The TVAE implementation by SDV does not require any data preprocessing to be done from our side. The model does its own encoding and normalization depending on the type of features. In order to determine the type of features, SDV library requires us to pass the metedata of ous data in the form of JSON. As we are using decision tree ensemble models like XGBoost and Random Forest, we do not need to normalize or standardize the data, but we do need to 
 
-\subsection{Proposed Approach}
 
 \subsection{Tabular Variational Autoencoder (TVAE)}
 
