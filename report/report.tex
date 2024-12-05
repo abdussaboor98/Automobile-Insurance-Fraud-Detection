@@ -1,0 +1,170 @@
+\documentclass[twoside,11pt]{article}
+
+
+% Any additional packages needed should be included after jmlr2e.
+% Note that jmlr2e.sty includes epsfig, amssymb, natbib and graphicx,
+% and defines many common macros, such as 'proof' and 'example'.
+%
+% It also sets the bibliographystyle to plainnat; for more information on
+% natbib citation styles, see the natbib documentation, a copy of which
+% is archived at http://www.jmlr.org/format/natbib.pdf
+
+% Available options for package jmlr2e are:
+%
+%   - abbrvbib : use abbrvnat for the bibliography style
+%   - nohyperref : do not load the hyperref package
+%   - preprint : remove JMLR specific information from the template,
+%         useful for example for posting to preprint servers.
+%fhajkfhcuhfkahficdaui
+% Example of using the package with custom options:
+%
+% \usepackage[abbrvbib, preprint]{jmlr2e}
+
+\usepackage[preprint]{jmlr2e}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{booktabs}
+
+% Definitions of handy macros can go here
+
+\newcommand{\dataset}{{\cal D}}
+\newcommand{\fracpartial}[2]{\frac{\partial #1}{\partial  #2}}
+
+% Short headings should be running head and authors last names
+
+\ShortHeadings{Novel Approach to deal with Data Imbalance in Automobile Insurance Fraud Data}{Alshamsi, Farhan and Mohammed}
+\firstpageno{1}
+
+\begin{document}
+
+\title{Novel Approach to deal with Data Imbalance in Automobile Insurance Fraud Data}
+
+\author{\name Abdus Saboor Gaffari Mohammed \email b00105302@aus.edu \\
+        \addr Department of Computer Science \& Engineering\\
+        Master of Science in Machine Learning\\
+        American University of Sharjah\\
+        Sharjah, UAE
+        \AND
+        \name Alizar Farhan \email @aus.edu \\
+        \addr Department of Computer Science \& Engineering\\
+        Master of Science in Computer Engineering\\
+        American University of Sharjah\\
+        Sharjah, UAE
+        \AND
+        \name Khalifa Alshamsi \email b00078654@aus.edu \\
+        \addr Department of Computer Science \& Engineering\\
+        Master of Science in Machine Learning\\
+        American University of Sharjah\\
+        Sharjah, UAE
+       } 
+
+\maketitle
+
+\begin{abstract}%   <- trailing '%' for backward compatibility of .sty file
+Abstract
+\end{abstract}
+
+\begin{keywords}
+  keyword one, keyword two, keyword three
+\end{keywords}
+
+\section{Introduction}
+
+\subsection{Contributions and Plan}
+
+\section{Background}
+\subsection{Data Imbalance}
+Data Imbalance refers to a situation in machine learning and data analysis where the distribution of classes in a dataset is highly uneven, with one class significantly outnumbering the other(s). This is common in real-world scenarios such as fraud detection, medical diagnosis, and anomaly detection, where the minority class (e.g., fraudulent claims, rare diseases) is often the most critical but underrepresented. Data imbalance poses challenges for machine learning models, as they tend to favor the majority class, leading to poor performance in predicting the minority class.
+To address this, techniques such as oversampling (e.g., SMOTE Chawla et al., 2002) or undersampling can be employed. Additionally, cost-sensitive learning and ensemble methods are also effective in enhancing the model's focus on minority class predictions (He & Garcia, 2009). Proper evaluation metrics like F1-score, precision-recall curves, and area under the precision-recall curve (AUC-PR) are essential for assessing performance on imbalanced datasets (Fernández et al., 2018).
+By addressing data imbalance, models can better generalize and improve performance in critical applications, ensuring fairness and reliability in decision-making tasks.
+\subsection{Data Leakage}
+
+\subsection{Synthetic Data}
+
+
+\section{Related Works}
+
+
+\section{Methodology}
+\subsection{Dataset}
+The dataset used in this reasearch is the \emph{carclaims.txt} data that originally made availabe as part of the Agnoss Knowlegde Seeker product. The original copy of the data is no longer available for download, but many publicly available copies are available through GitHub\footnote{https://github.com/Rashmi-77/Vehicle-Insurance-Fraud-Detection} and Kaggle\footnote{https://www.kaggle.com/datasets/khusheekapoor/vehicle-insurance-fraud-detection}. The dataset contains 15,420 samples of automobile insurance claims from an insurance company dor the years from 1994 to 1996. Out of the 15,420 only 923 are fraudulent claims indicating a very high imbalance in the date. This particular dataset was chosen because there are not many publicly availabe datasets on autmobile insurance fraud, and the ones that are availabe are very small. Another reason for choosing this data is that this has been extensively used in many other researches on automobile insurance fraud detection (\citealp{}), making it easy for comparative analysis.
+
+\begin{longtable}{>{\hspace{0pt}}m{0.244\linewidth}>{\hspace{0pt}}m{0.525\linewidth}>{\hspace{0pt}}m{0.169\linewidth}} 
+\caption{Details about the columns of the dataset - \emph{carclaims.txt}}
+\toprule
+\textbf{Column}      & \textbf{Description}                                  & \textbf{Type}   \endfirsthead
+Month                & Month when the incident occurred                      & Categorical     \\
+WeekOfMonth          & Week of the month when the incident occurred          & Categorical     \\
+DayOfWeek            & Day of the week when the incident occurred            & Categorical     \\
+Make                 & Make of the vehicle involved in the incident          & Categorical     \\
+AccidentArea         & Area where the accident occurred (Urban or Rural)     & Categorical     \\
+DayOfWeekClaimed     & Day of the week when the claim was made               & Categorical     \\
+MonthClaimed         & Month when the claim was made                         & Categorical     \\
+WeekOfMonthClaimed   & Week of the month when the claim was made             & Categorical     \\
+Sex                  & Gender of the policyholder                            & Categorical     \\
+MaritalStatus        & Marital status of the policyholder                    & Categorical     \\
+Age                  & Age of the policyholder                               & Numerical       \\
+Fault                & Indicates fault (Policy Holder or Third Party)        & Categorical     \\
+PolicyType           & Type of insurance policy                              & Categorical     \\
+VehicleCategory      & Category of the vehicle (e.g., Sport, Utility, Sedan) & Categorical     \\
+VehiclePrice         & Price range of the vehicle                            & Categorical     \\
+PolicyNumber         & Unique identifier for the policy                      & Numerical (PK)  \\
+RepNumber            & Identifier for the representative managing the case   & Categorical     \\
+Deductible           & Deductible amount in the policy                       & Categorical     \\
+DriverRating         & Driver rating (1 to 4)                                & Categorical     \\
+Days:Policy-Accident & Days between policy start and accident                & Categorical     \\
+Days:Policy-Claim    & Days between policy start and claim                   & Categorical     \\
+PastNumberOfClaims   & Number of claims made in the past                     & Categorical     \\
+AgeOfVehicle         & Age of the vehicle involved in the incident           & Categorical     \\
+AgeOfPolicyHolder    & Age range of the policyholder                         & Categorical     \\
+PoliceReportFiled    & Indicates if a police report was filed (Yes/No)       & Categorical     \\
+WitnessPresent       & Indicates if a witness was present (Yes/No)           & Categorical     \\
+AgentType            & Type of agent (Internal or External)                  & Categorical     \\
+NumberOfSuppliments  & Number of claim supplements                           & Categorical     \\
+AddressChange-Claim  & Time since the last address change                    & Categorical     \\
+NumberOfCars         & Number of cars in the policy                          & Categorical     \\
+Year                 & Year of the incident                                  & Categorical     \\
+BasePolicy           & Basic policy coverage (e.g., Liability, Collision)    & Categorical     \\
+FraudFound           & Indicates if fraud was found in the claim             & Categorical     \\
+\bottomrule
+\end{longtable}
+
+
+
+\subsection{Data Preprocessing}
+
+\subsection{Proposed Approach}
+
+\subsection{Tabular Variational Autoencoder (TVAE)}
+
+\section{Results and Analysis}
+
+\section{Conclusion and Future Work}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% Acknowledgements and Disclosure of Funding should go at the end, before appendices and references
+
+\acks{All acknowledgements go at the end of the paper before appendices and references.
+Moreover, you are required to declare funding (financial activities supporting the
+submitted work) and competing interests (related financial activities outside the submitted work).
+More information about this disclosure can be found on the JMLR website.}
+
+
+\appendix
+
+\vskip 0.2in
+\bibliography{references}
+
+\end{document}
