@@ -68,7 +68,7 @@ Automobile insurance fraud is a growing concern for the insurance industry as it
 
 In order to detect these activities in earlier times, insurance companies have sought out to investigating the claims by traditional methods. But these traditional methods rely on manual reviews and rule-based systems, which are time consuming, costly and prone to human error. The also introduces unwarrented scrutiny of legitimate claims (\citealp{AndreasRp,BERMUDEZ}). To tackle with these issues, experts have come up with many statistical models to detect insurance frauds like the one presented by \citealp{belhadjiModelDetectionInsurance2000}, which are still lag in performace and effeciency. 
 
-The advent of machine learning (ML) and artificial intelligence (AI) has introduced transformative approaches to fraud detection. By leveraging advanced techniques such as anomaly detection, predictive modeling, and behavior analysis, insurers can identify patterns indicative of fraud. However, these methods face a significant challenge: data imbalance. Fraudulent claims typically represent a small fraction of the total dataset, leading models to focus disproportionately on the majority class (genuine claims). This imbalance reduces the model's sensitivity to fraudulent cases, resulting in poor detection rates and overfitting problems (Phua et al., 2010). Additionally, the lack of publicly available high-quality datasets, due privacy concerns, further complicates efforts to improve fraud detection systems, as researchers often struggle with insufficient or skewed data.
+The advent of machine learning (ML) and artificial intelligence (AI) has introduced transformative approaches to fraud detection. By leveraging advanced techniques such as anomaly detection, predictive modeling, and behavior analysis, insurers can identify patterns indicative of fraud. However, these methods face a significant challenge: data imbalance. Fraudulent claims typically represent a small fraction of the total dataset, leading models to focus disproportionately on the majority class (genuine claims). This imbalance reduces the model's sensitivity to fraudulent cases, resulting in poor detection rates and overfitting problems (\citealp{phuaComprehensiveSurveyData2012}). Additionally, the lack of publicly available high-quality datasets, due privacy concerns, further complicates efforts to improve fraud detection systems, as researchers often struggle with insufficient or skewed data.
 
 \subsection{Contribution and Plan}
 
@@ -79,16 +79,18 @@ As we have already discussed, the main issues that pertain to automobile insuran
     \item How can we deal with the issue of data imbalance?
 \end{itemize}
 
-To address both these questions, we plan to use synthetic data generated using TVAE (\citealp{XuRp}). To tackle the first question we generated synthetic records for both the classes using TVAE and augmented them to the original data, effectively increasing the size of the datset. To tackle the second question, we used the TVAE again, but in this case we only generated synthetic data for the minority class, making sure that we only generate just enough samples that the number of fraud and non-fraud cases become equal. Using these two approaches, we plan to prove how TVAE can be used for effeciently balance the data and achieve better performance at the same time using oversampled synthetic data. Finally, for the classification task, we plan to use ensemble decision tree models like XGBoost and Random forest, which have proven to work well the the datset we have chosen.
+To address both these questions, we plan to use synthetic data generated using TVAE (\citealp{XuRp}). To tackle the first question we generated synthetic records for both the classes using TVAE and augmented them to the original data, effectively increasing the size of the datset. By creating more synthetic samples in the training data we aim to help make the model more robust and better generalizable to the unseen test data.
+
+To tackle the second question, we used the TVAE again, but in this case we only generated synthetic data for the minority class, making sure that we only generate just enough samples that the number of fraud and non-fraud cases become equal. Using these two approaches, we plan to prove how TVAE can be used for effeciently balance the data and achieve better performance at the same time using oversampled synthetic data. Finally, for the classification task, we plan to use ensemble decision tree models like XGBoost and Random forest, which have proven to work well the the datset we have chosen.
 
 To summarize, this study focuses on addressing the issue of data imbalance in automobile insurance fraud detection while improving the performance of machine learning techniques. Specifically, it explores the generation of synthetic datasets, the application of advanced ML models, and the challenges posed by limited data availability. The research aims to contribute to the development of robust and efficient fraud detection frameworks that not only mitigate the economic impact of fraud but also enhance the experience of genuine policyholders.
 
-The rest of the paper is organized in the following manner, Section \ref{sec:background} will introduce to some key concepts that the paper deals with followed by Section \ref{sec:relatedwork} talking about some of the related works in the same domain and their challenges. Section \ref{sec:method} will introduce to the chosen datset, the proposed methodology, and data preprocessing techniques employed. This is followed by the details on evaluation method used, results and discussions on the results in \ref{sec:results}. Finally \ref{sec:conclusion} will provide the conclusions and future directions.
+The rest of the paper is organized in the following manner, Section \ref{sec:background} will introduce to some key concepts that the paper deals with followed by Section \ref{sec:relatedwork} talking about some of the related works in the same domain and their challenges. Section \ref{sec:method} will introduce to the chosen datset, the proposed methodology, and data preprocessing techniques employed. This is followed by the details on evaluation method used, results and discussions on the results in Section \ref{sec:result}. Finally Section \ref{sec:conclusion} will provide the conclusions and future directions.
 
 \section{Background} \label{sec:background}
 \subsection{Data Imbalance}
 Data Imbalance refers to a situation in machine learning and data analysis where the distribution of classes in a dataset is highly uneven, with one class significantly outnumbering the other(s). This is common in real-world scenarios such as fraud detection, medical diagnosis, and anomaly detection, where the minority class (e.g., fraudulent claims, rare diseases) is often the most critical but underrepresented. Data imbalance poses challenges for machine learning models, as they tend to favor the majority class, leading to poor performance in predicting the minority class.
-To address this, techniques such as oversampling (e.g., SMOTE \citealp{chawlaSMOTESyntheticMinority2002}) or undersampling can be employed. Additionally, cost-sensitive learning and ensemble methods are also effective in enhancing the model's focus on minority class predictions (\citealp{garcia2009}). Proper evaluation metrics like F1-score, precision-recall curves, and area under the precision-recall curve (AUC-PR) are essential for assessing performance on imbalanced datasets (Fernández et al., 2018).
+To address this, techniques such as oversampling (e.g., SMOTE \citealp{chawlaSMOTESyntheticMinority2002}) or undersampling can be employed. Additionally, cost-sensitive learning and ensemble methods are also effective in enhancing the model's focus on minority class predictions (\citealp{garcia2009}). Proper evaluation metrics like F1-score, precision-recall curves, and area under the precision-recall curve (AUC-PR) are essential for assessing performance on imbalanced datasets (\citealp{fernandezPerformanceMeasures2018a}).
 By addressing data imbalance, models can better generalize and improve performance in critical applications, ensuring fairness and reliability in decision-making tasks.
 
 \subsection{Data Leakage}
@@ -99,31 +101,31 @@ Synthetic Data refers to artificially generated data that imitates actual-world 
 In simple terms, synthetic data acts alternatively for real records. For example, in training gadget learning models, synthetic data allows builders to test their algorithms without exposing non-public or private information. due to privacy constraints, It is typically utilized in fields like healthcare, finance, and autonomous structures to stability privacy, price, and scalability while ensuring information diversity and application.
 
 \section{Related Works}\label{sec:relatedwork}
-\begin{longtable}{|p{1.5cm}|p{2cm}|p{5cm}|p{5cm}|}
-\hline
-\textbf{Work} & \textbf{Balance Technique} & \textbf{Advantages/Strengths} & \textbf{Disadvantages/Weaknesses} \\
-\hline
-\citealp{Patel2019} & FCM + SMOTE & Under sampling via removing outliers + Generate synthetic samples to balance datasets & High computational cost due to clustering. Can introduce noise or synthetic data artifacts, leading to overfitting. \\
-\hline
-Salmi2022,\citealp{Patel2019} & Random oversampling & Easy to construct & Can lead to overfitting by duplicating existing data \\
-\hline
-Salmi2022,\citealp{Patel2019} & Random undersampling & Easy to construct, reduces computational cost & Can lead to loss of valuable information from the majority class \\
-\hline
-\citealp{Patel2019,Harjai2019,Salmi2022,Wongpanti2024} & SMOTE & Generate synthetic samples to balance datasets, widely used & Can introduce noise or synthetic data artifacts, leading to overfitting \\
-\hline
-\citealp{Salmi2022} & ROSE & Generates more diverse synthetic samples & Computationally intensive and may add noise to the dataset \\
-\hline
-\citealp{Wongpanti2024} & ADASYN & Generate synthetic samples for harder-to-classify instances & May skew data distribution, leading to overfitting in some cases \\
-\hline
-\citealp{Wongpanti2024} & GAN & Generates realistic synthetic data by mimicking data distribution & Requires extensive training and is computationally expensive \\
-\hline
-\citealp{Wongpanti2024} & CTGAN & Generates realistic synthetic data by mimicking data distribution, effectively handles categorical data & More complex and computationally intensive than GAN \\
-\hline
+
+
+
+\begin{longtable}{>{\hspace{0pt}}m{0.198\linewidth}>{\hspace{0pt}}m{0.096\linewidth}>{\hspace{0pt}}m{0.306\linewidth}>{\hspace{0pt}}m{0.337\linewidth}}
+\caption{}
+\label{tbl:relatedworks}\\
+\toprule
+\centering
+\textbf{Work}                                          & \textbf{Balance Technique} & \textbf{Strengths}                                                                           & \textbf{Weaknesses}                                                                                    \endfirsthead
+\citealp{Patel2019}                                    & FCM + SMOTE                & Under sampling via removing outliers + Generate synthetic samples to balance datasets                   & High computational cost due to clustering. Can introduce noise or synthetic data artifacts, leading to overfitting.  \\
+\citealp{Salmi2022,Patel2019}                          & Random oversampling        & Easy to construct                                                                                       & Can lead to overfitting by duplicating existing data                                                                 \\
+\citealp{Salmi2022,Patel2019}                          & Random undersampling       & Easy to construct, reduces computational cost                                                           & Can lead to loss of valuable information from the majority class                                                     \\
+\citealp{Patel2019,Harjai2019,Salmi2022,Wongpanti2024} & SMOTE                      & Generate synthetic samples to balance datasets, widely used                                             & Can introduce noise or synthetic data artifacts, leading to overfitting                                              \\
+\citealp{Salmi2022}                                    & ROSE                       & Generates more diverse synthetic samples                                                                & Computationally intensive and may add noise to the dataset                                                           \\
+\citealp{Wongpanti2024}                                & ADASYN                     & Generate synthetic samples for harder-to-classify instances                                             & May skew data distribution, leading to overfitting in some cases                                                     \\
+\citealp{Wongpanti2024}                                & GAN                        & Generates realistic synthetic data by mimicking data distribution                                       & Requires extensive training and is computationally expensive                                                         \\
+\citealp{Wongpanti2024}                                & CTGAN                      & Generates realistic synthetic data by mimicking data distribution, effectively handles categorical data & More complex and computationally intensive than GAN                                                                  \\
+\bottomrule
 \end{longtable}
 
 \section{Methodology} \label{sec:method}
+
+
 \subsection{Dataset}
-The dataset used in this research is the \emph{carclaims.txt} data that was originally made available as part of the Agnoss Knowledge Seeker product. The original copy of the data is no longer available for download, but many publicly available copies are available through GitHub\footnote{https://github.com/Rashmi-77/Vehicle-Insurance-Fraud-Detection} and Kaggle\footnote{https://www.kaggle.com/datasets/khusheekapoor/vehicle-insurance-fraud-detection}. The dataset contains 15,420 samples of automobile insurance claims from an insurance company for the years from 1994 to 1996. Out of the 15,420, only 923 are fraudulent claims indicating a very high imbalance in the date. This particular dataset was chosen because there are not many publicly available datasets on automobile insurance fraud, and the ones that are available are very small. Another reason for choosing this data is that this has been extensively used in many other researches on automobile insurance fraud detection (\citealp{GOMEZDENIZ}), making it easy for comparative analysis.
+The dataset used in this research is the \emph{carclaims.txt} data that was originally made available as part of the Agnoss Knowledge Seeker product. The original copy of the data is no longer available for download, but many publicly available copies are available through GitHub\footnote{https://github.com/Rashmi-77/Vehicle-Insurance-Fraud-Detection} and Kaggle\footnote{https://www.kaggle.com/datasets/khusheekapoor/vehicle-insurance-fraud-detection}. The dataset contains 15,420 samples of automobile insurance claims from an insurance company for the years from 1994 to 1996. Out of the 15,420, only 923 are fraudulent claims indicating a very high imbalance in the date. This particular dataset was chosen because there are not many publicly available datasets on automobile insurance fraud, and the ones that are available are very small. Another reason for choosing this data is that this has been extensively used in many other research on automobile insurance fraud detection (\citealp{schrijverAutomobileInsuranceFraud2024, Salmi2022, Padhi2020, Wongpanti2024, Harjai2019, Patel2019}), making it easy for comparative analysis.
 
 Table \ref{tab:dataCols} shows the various columns of the data and their details. Out of 33 columns only two columns are numerical, Age and PolicyNumber, and the remaining columns are all categorical including the target feature FraudFound. The main drawbacks of this data is that due to its small size and high imbalance the model performances is usually low, leading researches to employ oversampling techniques.
 
@@ -170,7 +172,11 @@ FraudFound           & Indicates if fraud was found in the claim                
 
 
 \subsection{Proposed Approach}
+The proposed model to balance the automobile insurance fraud data and to improve the performance of the ML models, uses a TVAE to generate synthetic data to balance the data and generate additinal samples for training the ML models. As shown in Figure \ref{fig:model} in the first phase of training, after the dataset is split into train and test set, the train set is used to train the TVAE. After the TVAE is trained, it is used to generate synthetic data that resembels the distributions of the original training data. The number of samples generated for each of the classes is determined by the imbalance between the classes and a predefined value that dictates the number of additional samples to be generated for both the classes. 
 
+First the difference in the number of occurences of the minority and majority classes is calculated. This difference is then added to the predefined value, this resulting value is used as the number of synthetic samples to be generated for the minority class using TVAE. Finally, the unchanged predefined value is used as the number of synthetic samples to be generated for the majority class. Combining these samples with the original trai set gives us a balanced and oversampled training data that can be used to train the classification models responsible for the prediction task. 
+
+The classification models chosen for the prediction task are the ensemble decision trees; XGBoost and Random Forest. These specific models were chosen as they are robust, scalable, and used heavily with the chosen dataset (\cite{schrijverAutomobileInsuranceFraud2024, Salmi2022, aiemsuwanNovelHybridMethod2024, owolabiAutoInsuranceFraudDetection2024}). 
 
 \begin{figure}
   \centering
@@ -180,6 +186,8 @@ FraudFound           & Indicates if fraud was found in the claim                
 \end{figure}
 
 \subsection{Tabular Variational Autoencoder (TVAE)}
+
+
 
 \subsection{Data Preprocessing}
 Before the data is fed to the machine learning models it need to be processed into format that can be easily understood and interpreted by the models. The TVAE implementation by SDV does not require any data preprocessing to be done from our side. The model does its own encoding and normalization depending on the type of features. In order to determine the type of features, SDV library requires us to pass the metedata of ous data in the form of JSON. As we are using decision tree ensemble models like XGBoost and Random Forest, we do not need to normalize or standardize the data, but we need to encode the features. Therefore, all the nominal features (As mentioned in Table \ref{tab:dataCols}) were one-hot encoded and all the ordinal features were label encoded.
