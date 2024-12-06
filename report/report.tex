@@ -57,7 +57,7 @@
 
 \begin{abstract}%   <- trailing '%' for backward compatibility of .sty file
 
-Our research addresses the critical issue of detecting automotive insurance fraud, a global problem that results in significant financial losses to the insurance companies and higher premium costs to policyholders. Auto-mobile insurance claim data suffers from data imbalance as there are less number of fraudulent insurance claims when compared to non-fraudulent claims. When we evaluated the generated datasets with machine learning models such as XGBoost and Random Forest, as well as classic resampling approaches, we got significant results in fraud detection accuracy, precision-recall and F1-score, even with imbalanced data available on the internet. This study encourages  the potential of merging generative models and advanced classifier, laying a solid foundation for fraud detection systems in the industry and opening the way for future advances in hyper-parameters tuning and ensemble learning in study Machine Learning and models.
+Insurance fraud is one of the most critical issues in the automobile fraud industry, as it not only results in significant financial losses to the insurance companies but also results in higher premium costs to the policy holders. To overcome the drawbacks of traditional methods, researchers have implemented machine learning techniques to efficiently detect fraudulent claims. But as there are less number of fraudulent insurance claims when compared to non-fraudulent claims, the automobile insurance claims data is mostly imbalanced, leading to diminished performance of ML models. To overcome these issues traditional oversampling and undersampling techniques are applied. Our research introduces a novel approach to balance the data by generating synthetic samples with the use of TVAE. We evaluated the performance of the the approach by training XGBoost and Random Forest classification models with data balance using TVAE and other traditional techniques such as SMOTE, ADASYN, Random Over Sampling and Random Under Sampling. In addition to balancing the data, we also improved the performance of the models by augmenting the data with more synthetic samples generated using the same TVAE. Our results show that using TVAE for balancing and augmenting the training data makes the model better ant generalizing to unseen patterns.
 
 \end{abstract}
 
@@ -232,20 +232,42 @@ In this section we will look at the evaluation results of our proposed approach.
 \hline
 \textbf{Work} & \textbf{Dataset} & \textbf{Methods} & \textbf{Balance Techniques} & \textbf{Order(Split/Balance)} & \textbf{Result Accuracy} & \textbf{Result Precision} & \textbf{Result Recall} & \textbf{Result F1-score} \\
 \hline
-[6] & carclaims.txt & ELM & Not Mentioned & Balance the data then split & 74.9\% & 74.9\% & 74.9\% & 74.9\% \\
+\cite{Patel2019} & carclaims.txt & ELM & Not Mentioned & Balance the data then split & 74.9\% & 74.9\% & 74.9\% & 74.9\% \\
 \hline
-[2] & carclaims.txt & Random Forest & SMOTE & Balance the data then split & 94.3\%, 98.6\%, 45.1\% & 94.3\%, 98.6\%, 45.1\% & 94.3\%, 98.6\%, 45.1\% & 94.3\%, 98.6\%, 45.1\%, 61.9\% \\
+\cite{Harjai2019} & carclaims.txt & Random Forest & SMOTE & Balance the data then split & 94.3\%, 98.6\%, 45.1\% & 94.3\%, 98.6\%, 45.1\% & 94.3\%, 98.6\%, 45.1\% & 94.3\%, 98.6\%, 45.1\%, 61.9\% \\
 \hline
-[3] & carclaims.txt & Random Forest & SMOTE \newline ROSE & Split Data then balance & 64.3\% \newline 61.34\% & -- \newline 14.1\% & 93.07\% \newline 95.24\% & 23.8\% \newline 22.79\% \\
+\cite{Salmi2022} & carclaims.txt & Random Forest & SMOTE \newline ROSE & Split Data then balance & 64.3\% \newline 61.34\% & -- \newline 14.1\% & 93.07\% \newline 95.24\% & 23.8\% \newline 22.79\% \\
 \hline
-[1] & carclaims.txt & Ensemble of SVM, MLP, KNN & FCM (Under Sampling), SMOTE & Balance the data then split & 81.2\% & -- & -- & 94.2\% \\
+\cite{Salmi2022} & carclaims.txt & Ensemble of SVM, MLP, KNN & FCM (Under Sampling), SMOTE & Balance the data then split & 81.2\% & -- & -- & 94.2\% \\
 \hline
-[5] & carclaims.txt & 4-layer 1D-CNN & SMOTE \newline CTGAN & Split Data then balance & 81.3\% \newline 79.3\% & 13.6\% \newline 16.7\% & 39.8\% \newline 61.5\% & 20.3\% \newline 26.2\% \\
+\cite{Wongpanti2024} & carclaims.txt & 4-layer 1D-CNN & SMOTE \newline CTGAN & Split Data then balance & 81.3\% \newline 79.3\% & 13.6\% \newline 16.7\% & 39.8\% \newline 61.5\% & 20.3\% \newline 26.2\% \\
 \hline
 Proposed & carclaims.txt & Random Forest XGBoost & TVAE & Split Data then balance and oversample & 87.13\% & 28.66\% & 66.83\% & 87.13\%, 28.66\%, 66.83\%, 40.12\% \\
 \hline
 \end{longtable}
 
+does this code fix?
+\begin{longtable}{|p{1.8cm}|p{1.2cm}|p{2.2cm}|p{2.3cm}|p{2.5cm}|p{2.2cm}|p{2cm}|p{2.2cm}|p{2.6cm}|}
+\hline
+\textbf{Work} & \textbf{Dataset} & \textbf{Methods} & \textbf{Balance Techniques} & \textbf{Order (Split/Balance)} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} \\
+\hline
+\cite{Patel2019} & carclaims.txt & ELM & Not Mentioned & Balance the data then split & 74.9\% & 74.9\% & 74.9\% & 74.9\% \\
+\hline
+\cite{Harjai2019} & carclaims.txt & Random Forest & SMOTE & Balance the data then split & 94.3\% & 98.6\% & 45.1\% & 61.9\% \\
+\hline
+\cite{Salmi2022} & carclaims.txt & Random Forest & SMOTE \\ ROSE & Split data then balance & 64.3\% \\ 61.34\% & -- \\ 14.1\% & 93.07\% \\ 95.24\% & 23.8\% \\ 22.79\% \\
+\hline
+\cite{Padhi2020} & carclaims.txt & Ensemble of SVM, MLP, KNN & FCM (Under Sampling), SMOTE & Balance the data then split & 81.2\% & -- & -- & 94.2\% \\
+\hline
+\cite{Wongpanti2024} & carclaims.txt & 4-layer 1D-CNN & SMOTE \\ CTGAN & Split data then balance & 81.3\% \\ 79.3\% & 13.6\% \\ 16.7\% & 39.8\% \\ 61.5\% & 20.3\% \\ 26.2\% \\
+\hline
+Proposed & carclaims.txt & Random Forest, XGBoost & TVAE & Split data then balance and oversample & 87.13\% & 28.66\% & 66.83\% & 40.12\% \\
+\hline
+\end{longtable}
+
+
+
+% in order: Patel2019   Harjai2019  Salmi2022 Padhi2020 Wongpanti2024
 
 \subsubsection{Balance data after split} \label{sec:afterSplit}
 Figure \ref{fig:xgboost_oversample_after_split} shows the performance metrics for XGBoost, when the balancing of data was done only on the training data after the train-test split is performed. From the figure we can gather that XGBoost was able to achiebe the best F1 score, of 37.1\%, when the data balancing was done using TVAE. Moreover, when the data was augment with additional synthetic samples by TVAE in addition to balancing, the model was able to achieve an F1 score of 40.1\%. The TVAE balanced model was also able to achieve a good recall, indicating that the model is able to identify the fraudulent claims better with TVAE balanced data when compared to other traditional methods like SMOTE, ADASYN or ROS. Data balanced using RUS gives the best recall, but it comes at the cost of precision, meaning that the model is overfitting to the fraudulent cases as an result of under representation of genuine claims due to undersampling.  The data balanced using ROSE achieves the best precision, but performs very poorly in terms of recall, indicating its inability to generalize to the test data. Whereas, the TVAE balanced data is able to achieve very good precision as well, leading to a goof F1 score. Finally in terms of accuracy, the TVAE balanced data achieves an accuracy of 89.1\%, which is very close the best accuracy provided by ROSE.
