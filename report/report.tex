@@ -24,6 +24,8 @@
 \usepackage{array}
 \usepackage{longtable}
 \usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{amssymb}
 
 \ShortHeadings{Novel Approach to deal with Data Imbalance in Automobile Insurance Fraud Data}{Alshamsi, Farhan and Mohammed}
 \firstpageno{1}
@@ -97,19 +99,36 @@ By addressing data imbalance, models can better generalize and improve performan
 Data leakage in machine learning occurs when the attributes and features of the test data are introduced in the training data, and these attributes or features won't be availabe during the actual prediction stage of the model. Data leakage lead to having a good or excellent peroformance in the training and testing phase, but fails in the production phase. The common causes of data leakage include improper preprocessing, flawed feature engineering, or cross-validation errors \cite{Kaufman2012}. Data leakage can also be a result of oversampling the data before the data is split for training. When the data is split into train and test after oversampling, the data samples that are very similar, or identical in some cases, to the test data are introduced in the training data which leads the model to overfit to the test resulting in good testing performance. Data leakage is of more concern in the cases like fraud and fault identification as these involve detectuion of anomalies and outliers. Data leakage in these cases causes the model to memorize the fraudulent data rather than understanding the underlying patterns (\citealp{baesensRobROSERobustApproach2021}).
 
 \subsection{Synthetic Data}
-Synthetic Data refers to artificially generated data that imitates actual-world information at the same time as keeping its statistical and structural format. According to \citealp{SyntheticPatki2016}, synthetic data may be created by the usage of algorithms, simulations, or generative models like GANs (Generative Adversarial Networks) and is used when real information is inaccessible, constrained, or sensitive.
-In simple terms, synthetic data acts alternatively for real records. For example, in training gadget learning models, synthetic data allows builders to test their algorithms without exposing non-public or private information. due to privacy constraints, It is typically utilized in fields like healthcare, finance, and autonomous structures to stability privacy, price, and scalability while ensuring information diversity and application.
+Synthetic Data refers to artificially generated data that imitates actual-world information at the same time as keeping its statistical and structural format. According to \citealp{SyntheticPatki2016}, synthetic data may be created by the usage of algorithms, simulations, or generative models like GANs (Generative Adversarial Networks) is used when real information is inaccessible, constrained, or sensitive.
+In simple terms, synthetic data acts alternatively for real records. For example, in training gadget learning models, synthetic data allows builders to test their algorithms without exposing non-public or private information. Due to privacy constraints, it is typically utilized in fields like healthcare, finance, and autonomous structures to stability privacy, price, and scalability while ensuring information diversity and application.
 
 \section{Related Works}\label{sec:relatedwork}
 
+This literature review explores various balancing techniques from recent studies on predicting auto insurance fraud, highlighting their contributions and limitations, followed by a critical analysis. These methods will serve as baseline methods for comparisons.
+
+One of the early studies \cite{Patel2019} proposed a methodology for detecting fraudulent auto insurance claims using an Extreme Learning Machine (ELM). To ensure consistent scaling and reduce the impact of differing feature ranges on classifier performance, numerical features were normalized to a range between 0 and 1 using Min-Max normalization. The ELM model consists of a single-hidden-layer feed-forward neural network with neurons and their weights randomly initialized, emphasizing high training time. A sigmoid activation function was employed for classification. The effectiveness of the model depends on two critical hyperparameters: the number of hidden layer nodes (\(Q\)) and the regularization parameter (\(C\)), which were optimized using grid search to identify the best-performing combination. The study utilized the "carclaims.txt" dataset and divided it into training and testing sets (80\%/20\%), while maintaining the class distribution through stratified random sampling. Consequently, experimental results highlighted the ELM's performance, achieving sensitivity and specificity of 47.40\% and 74.98\%, respectively, validated through 10-fold cross-validation. The proposed ELM method outperformed existing models such as Probabilistic Neural Network (PNN), Multi-Layer Perceptron (MLP), Decision Tree (DT), and Group Method of Data Handling (GMDH).
+
+
+Harjai et al. \cite{Harjai2019} evaluated the effectiveness of combining the Synthetic Minority Oversampling Technique (SMOTE) with the Random Forest (RF) classifier for detecting automobile insurance fraud. The methodology began with data preprocessing including cleaning steps such as removing redundant data, duplicates, and outliers, as well as transforming seven time-related features into two standardized date-time features in the YYYY-MM-DD format. Due to the severe class imbalance in the dataset "carclaims.txt" (6\% minority class), SMOTE was applied to balance the data before splitting it into an 80/20 training and testing set. Subsequently, the non-parametric Random Forest classifier was employed known for leveraging its ability to identify important features through its bagging approach. This involved constructing 100 parallel decision trees, with each tree trained on different subsets of features using random sampling with replacement, and determining the final classification through majority voting. The proposed approach achieved an accuracy of 94.3\%, precision of 98.6\%, recall of 45.1\%, and an F1-score of 61.9\%, validated using 10-fold cross-validation. These results highlight the effectiveness of Random Forest and SMOTE in addressing imbalanced datasets for fraud detection.
+
+Similarly, in another study, the authors \cite{Salmi2022} conducted a comprehensive evaluation comprising six experiments to assess the effectiveness of SMOTE and Random Over-Sampling Examples (ROSE) as oversampling techniques in combination with Random Forest (RF) and Logistic Regression (LR) classifiers for predicting automobile insurance fraud. Data preprocessing involved removing identification and illogical variables, such as zeros in 'Age,' 'MonthClaimed,' and 'DayOfWeekClaimed,' and applying label encoding to categorical features. Two feature subsets were examined: one with 23 features derived from a prior study, and another with 5 features ('BasePolicy,' 'Fault,' 'VehicleCategory,' 'AddressChange\_Claim,' and 'AccidentArea') selected for their high correlation with the target variable using a Chi-Square test. The dataset, "carclaims.txt," was split into training and testing sets using a 75/25 proportional stratified sampling method to preserve class distribution in both sets. Recognizing the challenges of oversampling or undersampling techniques, such as overfitting or loss of relevant information, respectively, the authors employed SMOTE and ROSE to oversample the minority class in the training set to match the majority class. SMOTE generated synthetic samples using five nearest neighbors (\(k = 5\)), while ROSE applied a “smooth bootstrap” approach. Results demonstrated that RF consistently outperformed LR across all feature and oversampling combinations. SMOTE and ROSE produced comparable metrics, with the best performance achieved using RF and ROSE on the 23-feature subset (Accuracy: 64.36\%, Recall: 93.07\%, Specificity: 62.53\%, F1-Score: 23.84\%) and RF with SMOTE on the 5-feature subset (Accuracy: 61.34\%, Recall: 95.24\%, Specificity: 61.35\%, F1-Score: 22.79\%). These results highlight RF's strong performance and the effectiveness of both oversampling methods.
+
+Lokashree et al. \cite{Padhi2020} proposed a novel hybrid approach that combines balancing techniques with ensemble algorithms to address the challenge of class imbalance in efficiently detecting insurance fraud claims. The authors highlighted that using either random oversampling or under-sampling techniques alone is insufficient to generate a balanced class distribution or reduce skewness; additionally, these techniques tend to cause overfitting. Their hybrid method for balancing involves under-sampling the majority class (non-fraud) using fuzzy C-means clustering (FCM). This technique calculates the Euclidean distance between all data points in the majority class and the generated clusters, marking data points exceeding a specified threshold distance as outliers. The threshold distance was computed using the box-and-whisker technique. Simultaneously, the SMOTE technique was employed to oversample the minority class, increasing its instances to match those of the majority class. This dual approach not only balances the dataset but also excludes outliers and reduces skewness, thereby improving the dataset quality for model training. Subsequently, the balanced dataset was divided into standard 80/20\% splits for training and testing. The training set was fed into three ensemble supervised classification techniques: support vector machine (SVM), multilayer perceptron (MLP), and K-nearest neighbors (KNN). Final classification was determined using the majority voting technique. The study utilized a real-world automobile insurance dataset, "carclaims.txt," and achieved average performance metrics of 94.2\% recall, 73.0\% specificity, and 81.2\% accuracy using a 10-fold cross-validation technique. These results demonstrate a significant improvement in performance compared to the original imbalanced dataset.
+
+
+A study by \cite{Wongpanti2024} proposed a hybrid approach utilizing a one-dimensional Convolutional Neural Network (1D-CNN) for its excellent spatial feature extraction capabilities in combination with Conditional Tabular Generative Adversarial Networks (CTGAN) to enhance auto insurance fraud classification. The authors highlighted CTGAN’s advantages over previous synthetic data generation techniques, such as Adaptive Synthetic Sampling (ADASYN), Random Oversample, and traditional Generative Adversarial Networks. GANs use a generator to generate synthetic data and a discriminator to distinguish it from real data. This process iterates until the discriminator can no longer differentiate between real and synthetic data, thereby producing realistic synthetic samples. CTGAN builds upon GANs but is specifically designed to handle categorical features effectively, making it particularly suitable for tabular datasets. The preprocessing steps involved removing multicollinearity using Pearson correlation to eliminate highly correlated features, followed by standardizing numerical features using the z-score method. Categorical features were encoded using label encoding for ordinal variables and one-hot encoding for nominal variables. The study employed the "carclaims.txt" dataset and performed a performance comparison between CTGAN with 1D-CNN as the classifier and the widely used SMOTE technique with the same classifier. Results showed that CTGAN outperformed SMOTE and ADASYN significantly across all performance metrics, establishing CTGAN as a superior data balancing technique for handling highly categorical datasets.
+
+All except the first work implemented balancing techniques. Although these proposed methods aim to mitigate the issue of imbalanced datasets and improve overall performance metrics, achieving higher F1 scores remains a significant challenge. It is also beneficial to use these techniques as baseline methods for performance comparisons. Table \ref{tbl:relatedworks} summarizes the balancing techniques reviewed in the literature, highlighting their respective advantages and disadvantages.
+
+Upon further analysis of the papers, we identified biases in their methodologies. Papers such as (\citealp{Harjai2019, Padhi2020}) and those discussed in a survey by \cite{schrijverAutomobileInsuranceFraud2024} applied balancing techniques before splitting the data into training and test sets. This approach introduces data leakage that artificially inflates performance metrics and undermines the credibility of the reported results. While this may make the models appear effective, they are likely to fail in real-world production scenarios. To ensure unbiased and reliable evaluations, it is vital to first split the dataset and then apply balancing techniques to prevent data leakage and maintain the integrity of the results. 
 
 
 \begin{longtable}{>{\hspace{0pt}}m{0.198\linewidth}>{\hspace{0pt}}m{0.096\linewidth}>{\hspace{0pt}}m{0.306\linewidth}>{\hspace{0pt}}m{0.337\linewidth}}
-\caption{}
+\caption{Summary of various oversampling and undersampling methods used in related works}
 \label{tbl:relatedworks}\\
 \toprule
 \centering
-\textbf{Work}                                          & \textbf{Balance Technique} & \textbf{Strengths}                                                                           & \textbf{Weaknesses}                                                                                    \endfirsthead
+\textbf{Work}                                          & \textbf{Balance Technique} & \textbf{Advantages}                                                                           & \textbf{Disadvantages}                                                                                    \endfirsthead
 \citealp{Patel2019}                                    & FCM + SMOTE                & Under sampling via removing outliers + Generate synthetic samples to balance datasets                   & High computational cost due to clustering. Can introduce noise or synthetic data artifacts, leading to overfitting.  \\
 \citealp{Salmi2022,Patel2019}                          & Random oversampling        & Easy to construct                                                                                       & Can lead to overfitting by duplicating existing data                                                                 \\
 \citealp{Salmi2022,Patel2019}                          & Random undersampling       & Easy to construct, reduces computational cost                                                           & Can lead to loss of valuable information from the majority class                                                     \\
@@ -122,8 +141,6 @@ In simple terms, synthetic data acts alternatively for real records. For example
 \end{longtable}
 
 \section{Methodology} \label{sec:method}
-
-
 \subsection{Dataset}
 The dataset used in this research is the \emph{carclaims.txt} data that was originally made available as part of the Agnoss Knowledge Seeker product. The original copy of the data is no longer available for download, but many publicly available copies are available through GitHub\footnote{https://github.com/Rashmi-77/Vehicle-Insurance-Fraud-Detection} and Kaggle\footnote{https://www.kaggle.com/datasets/khusheekapoor/vehicle-insurance-fraud-detection}. The dataset contains 15,420 samples of automobile insurance claims from an insurance company for the years from 1994 to 1996. Out of the 15,420, only 923 are fraudulent claims indicating a very high imbalance in the date. This particular dataset was chosen because there are not many publicly available datasets on automobile insurance fraud, and the ones that are available are very small. Another reason for choosing this data is that this has been extensively used in many other research on automobile insurance fraud detection (\citealp{schrijverAutomobileInsuranceFraud2024, Salmi2022, Padhi2020, Wongpanti2024, Harjai2019, Patel2019}), making it easy for comparative analysis.
 
@@ -186,8 +203,11 @@ The classification models chosen for the prediction task are the ensemble decisi
 \end{figure}
 
 \subsection{Tabular Variational Autoencoder (TVAE)}
+TVAE is an adaptation of variational autoencoders that is designed to handle synthetic data generation for tabular data. It was proposed by \cite{XuRp} as a baseline for comparative analysis against their generative model for tabular data, CTGAN. Both the models were designed to deal with the mixed types of data, continuous and discrete, often seen in tabular data. Continuous columns might have a group of values that occur more frequent and discrete or categorical columns may be imbalanced. Moreover, continuous data is usually non-Gaussian making then difficult to be normalized and tabular data usually contains mutimodal distributions. 
 
+To deal with the issue of non-Gaussian continuous values TVAE and CTGAN use a \emph{mode-specific} normalization and the discrete columns are \emph{one-hot} encoded. The latent space of the VAE is modified as the joint distribution of \(2N_c + N_d\), where \(N_c\) are the continuous columns and \(N_d\) are discrete columns. For the training and data generation task the continuous columns are assmed to follow a Gaussian distribution and discrete columns follow a categorical PMF. One drawback of TVAE over CTGAN, given in the paper by authorts, is the TVAE need to be trained on the actual data whereas CTGAN need not be. 
 
+The specific implementation of TVAE used is the one provided by SDV (Synthetic Data Vault, \citealp{SDV}). SDV is a python library designed for creating synthetic tabular data.
 
 \subsection{Data Preprocessing}
 Before the data is fed to the machine learning models it need to be processed into format that can be easily understood and interpreted by the models. The TVAE implementation by SDV does not require any data preprocessing to be done from our side. The model does its own encoding and normalization depending on the type of features. In order to determine the type of features, SDV library requires us to pass the metedata of ous data in the form of JSON. As we are using decision tree ensemble models like XGBoost and Random Forest, we do not need to normalize or standardize the data, but we need to encode the features. Therefore, all the nominal features (As mentioned in Table \ref{tab:dataCols}) were one-hot encoded and all the ordinal features were label encoded.
@@ -196,6 +216,9 @@ Before the data is fed to the machine learning models it need to be processed in
 \subsection{Metrics}
 
 \subsection{Evaluation}
+We will evaluate our proposed method by comparing the performance of the chosen classification models with different oversampling and undersampling techniques. The proposed approach only applies the oversampling on the training data after splitting the data for test and train, but in order to compare our performance with studies that performed oversampling before the split we have also evaluated additional results by oversampling before the split. The subsection \ref{sec:afterSplit} will discuss the results when the oversampling was performed after the split as mentioned in the proposed approach. The subsection \ref{sec:beforeSplit} will discuss the results when the oversampling was applied before the split.
+
+The TVAE implementation provided by SDV gives the flexibility to tune the model to our requirement through parameters like number of epochs, the encoder dimensions, the decoder dimension, the latent space dimension etc. Therefore, to achieve the best results possible, hyper-parameter tuning was performed by employing Bayesian optimization methods provided by the libraries, \emph{hyperopt} (\citealp{bergstraMakingScienceModel}) and \emph{scikit-optimize}\footnote{https://scikit-optimize.github.io/stable/index.html}. In addition to tuning the TVAE hyper-parameters, the parameters for XGBoost and Random Forest were also tuned, using the same library, for all the oversampling and undersampling methods, using the same search space.
 
 \subsection{Results}
 
@@ -218,8 +241,15 @@ Proposed & carclaims.txt & Random Forest XGBoost & TVAE & Split Data then balanc
 \end{longtable}
 
 
-\subsubsection{Balance data after split}
-
+\subsubsection{Balance data after split} \label{sec:afterSplit}
+\ref{fig:xgboost_oversample_after_split}
+\ref{fig:rf_oversample_after_split}
+\begin{figure}
+  \centering
+  \includegraphics[width=0.85\textwidth]{images/xgboost_oversample_after_split.png}
+  \caption{}
+  \label{fig:xgboost_oversample_after_split}
+\end{figure}
 \begin{figure}
   \centering
   \includegraphics[width=0.85\textwidth]{images/rf_oversample_after_split.png}
@@ -227,53 +257,34 @@ Proposed & carclaims.txt & Random Forest XGBoost & TVAE & Split Data then balanc
   \label{fig:rf_oversample_after_split}
 \end{figure}
 
-\begin{figure}
-  \centering
-  \includegraphics[width=0.85\textwidth]{images/xgboost_oversample_after_split.png}
-  \caption{}
-  \label{fig:xgboost_oversample_after_split}
-\end{figure}
 
-\subsubsection{Balance data before split}
 
-\begin{figure}
-  \centering
-  \includegraphics[width=0.85\textwidth]{images/rf_oversample_before_slit.png}
-  \caption{}
-  \label{fig:rf_oversample_after_split}
-\end{figure}
+\subsubsection{Balance data before split} \label{sec:beforeSplit}
+\ref{fig:xgboost_oversample_before_split}
+\ref{fig:rf_oversample_before_split}
 
 \begin{figure}
   \centering
   \includegraphics[width=0.85\textwidth]{images/xgboost_oversample_before_split.png}
   \caption{}
-  \label{fig:xgboost_oversample_after_split}
+  \label{fig:xgboost_oversample_before_split}
 \end{figure}
 
+\begin{figure}
+  \centering
+  \includegraphics[width=0.85\textwidth]{images/rf_oversample_before_slit.png}
+  \caption{}
+  \label{fig:rf_oversample_before_split}
+\end{figure}
+
+
+
 \section{Conclusion and Future Work}  \label{sec:conclusion}
+To summarize, this project addressed the challenge of severely imbalanced datasets in automobile insurance fraud detection while improving the performance of applied machine learning techniques. A comprehensive review of current balancing methods highlighted persistent challenges, such as handling high-categorical features and generating noisy synthetic data. This study utilized the "carclaims.txt" dataset, which is highly imbalanced and includes 30 categorical features. Preprocessing involved cleaning the data and applying one-hot and label encoding. To address the imbalance issue, TVAE was proposed as a balancing technique that generates realistic synthetic data and effectively handles categorical features. Experimental results demonstrated that TVAE, when combined with Random Forest and XGBoost, achieved the highest F1 score, both before and after splitting, surpassing other balancing techniques (CTGAN, ADAYSN, FCM, SMOTE, ROSE, RUS, and ROS). Furthermore, when more synthetic data generated using TVAE was added to the training data, the model performance improved slightly. These findings underscore the effectiveness of TVAE in mitigating dataset imbalance and improving fraud detection performance. This approach has broader applicability in fields like credit card fraud detection and beyond.
+Although we able to outperform existing state-of-the-art performance for the dataset, there is still room for improvement. Future research could explore advanced and broader hyperparameter optimization techniques to further fine-tune the parameters of TVA, XGBoost and Random Forest. Additionally, modern clustering techniques could be leveraged to address the complexity of highly nuanced auto insurance fraud datasets. Incorporating ensemble learning methods may also yield significant improvements in detecting fraudulent claims. These efforts aim to advance the development of more precise and impactful methods for insurance fraud classification.
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-% Acknowledgements and Disclosure of Funding should go at the end, before appendices and references
-
-\acks{All acknowledgements go at the end of the paper before appendices and references.
-Moreover, you are required to declare funding (financial activities supporting the
-submitted work) and competing interests (related financial activities outside the submitted work).
-More information about this disclosure can be found on the JMLR website.}
-
-
-\appendix
+\acks{We would like to express our heartfelt gratitude to Dr. Alex Aklson for his guidance and American University of Sharjah for providing access to external GPU resources which significantly speeded up the training process} 
 
 \vskip 0.2in
 \bibliography{references}
